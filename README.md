@@ -21,6 +21,8 @@ A Video-RAG pipeline was developed where semantic descriptions of sequential fra
 ## Video-RAG Evaluation Results
 <img width="1179" height="619" alt="image" src="https://github.com/user-attachments/assets/8c2d9e2a-1b98-4829-9d72-bbf7e961cf92" />
 
+# Usecase Example
+<img width="850" height="858" alt="image" src="https://github.com/user-attachments/assets/fa942477-9c69-42c1-91cf-2454d01042b1" />
 
 # Cost-Effeciency Analysis
 <img width="1862" height="422" alt="image" src="https://github.com/user-attachments/assets/0478c25c-ba69-4e1d-a0a4-c698a941ba3e" />
