@@ -797,38 +797,38 @@ def prompt_func(data_dict):
 if __name__ == "__main__":
     start_time = time.time()
 
-    # # STEP 1: Generate the semantic descriptions for all input videos
-    # for root, _, files in os.walk(video_folder):  # Walk through all subfolders
-        # for video_file in files:
-            # if video_file.lower().endswith(('.mp4', '.avi', '.mov', '.mkv')):  # Check if it's a video
-                # video_path = os.path.join(root, video_file)
-                # print(f"#### Processing video: {video_path}")
+    # STEP 1: Generate the semantic descriptions for all input videos
+    for root, _, files in os.walk(video_folder):  # Walk through all subfolders
+        for video_file in files:
+            if video_file.lower().endswith(('.mp4', '.avi', '.mov', '.mkv')):  # Check if it's a video
+                video_path = os.path.join(root, video_file)
+                print(f"#### Processing video: {video_path}")
 
                 # Extract the relative subfolder name (if any)
-                # relative_subfolder = os.path.relpath(root, video_folder)
+                relative_subfolder = os.path.relpath(root, video_folder)
 
                 # Extract video name (without extension)
-                # video_name = os.path.splitext(video_file)[0]
+                video_name = os.path.splitext(video_file)[0]
 
                 # Define the corresponding output subfolder
-                # video_output_folder = os.path.join(extractedFrames_folder, relative_subfolder, video_name)
-                # os.makedirs(video_output_folder, exist_ok=True)
+                video_output_folder = os.path.join(extractedFrames_folder, relative_subfolder, video_name)
+                os.makedirs(video_output_folder, exist_ok=True)
 
                 # Extract frames and get FPS
-                # fps = extract_frames(video_path, video_output_folder, frame_interval_i)
+                fps = extract_frames(video_path, video_output_folder, frame_interval_i)
 
                 # Define unique text and PDF file names, keeping subfolder structure
-                # output_subfolder = os.path.join(output_folder, relative_subfolder)
-                # os.makedirs(output_subfolder, exist_ok=True)
+                output_subfolder = os.path.join(output_folder, relative_subfolder)
+                os.makedirs(output_subfolder, exist_ok=True)
 
-                # video_text_file = os.path.join(output_subfolder, f"{video_name}.txt")
-                # video_pdf_file = os.path.join(output_subfolder, f"{video_name}.pdf")
+                video_text_file = os.path.join(output_subfolder, f"{video_name}.txt")
+                video_pdf_file = os.path.join(output_subfolder, f"{video_name}.pdf")
 
                 # Generate semantic descriptions and save per video
-                # generate_semantic_description(GPT4o_agent_def, video_output_folder, video_text_file, fps)
+                generate_semantic_description(GPT4o_agent_def, video_output_folder, video_text_file, fps)
 
                 # Convert the text file into a PDF
-                # text_to_pdf(video_text_file, video_pdf_file)
+                text_to_pdf(video_text_file, video_pdf_file)
 
     fps_values = []
     f_values = []
@@ -837,12 +837,12 @@ if __name__ == "__main__":
     cp_values = []
     
     ## STEP 7: Loading the prepared testset 
-    # SurgicalRobots_VPQA_testset = pd.read_excel('Dataset/VPQA_testset_SurgicalRobots233.xlsx')
-    # #display(HW-Troubleshooting_VPQA_testset)
-    # test_questions = SurgicalRobots_VPQA_testset['Question'].values.tolist()
-    # test_groundtruths = SurgicalRobots_VPQA_testset['Answer'].values.tolist()   
+    SurgicalRobots_VPQA_testset = pd.read_excel('Dataset/VPQA_testset_SurgicalRobots233.xlsx')
+    #display(HW-Troubleshooting_VPQA_testset)
+    test_questions = SurgicalRobots_VPQA_testset['Question'].values.tolist()
+    test_groundtruths = SurgicalRobots_VPQA_testset['Answer'].values.tolist()   
     
-    #
+    
     HW_Troubleshooting_VPQA_testset = pd.read_excel('Dataset/VPQA_testset_HWTroubleshooting2.xlsx')
     #display(HW-Troubleshooting_VPQA_testset)
     test_questions = HW_Troubleshooting_VPQA_testset['Question'].values.tolist()
@@ -861,69 +861,69 @@ if __name__ == "__main__":
         audio_db_path = f"chroma_audio_db_HW-Troubleshooting_{fps_i}fps"
         #os.makedirs(audio_db_path, exist_ok=True)
         
-        # ##################################################################################################################
-        # ##############################################VECTOR BASE SETUP####################################################
+        ##################################################################################################################
+        ##############################################VECTOR BASE SETUP####################################################
 
-        # ### Create vector store collections
+        ### Create vector store collections
         # Multimodal Descriptions Text Vector Store
-        # client1_text = chromadb.PersistentClient(path=frame_descriptions_db_path)
-        # collection1_text = 'text_collection'
-        # mmtext_vector_store = client1_text.get_or_create_collection(
-            # name=collection1_text,
-            # embedding_function=emb_fn_txt,
-            # metadata={"hnsw:space": "cosine"})
+        client1_text = chromadb.PersistentClient(path=frame_descriptions_db_path)
+        collection1_text = 'text_collection'
+        mmtext_vector_store = client1_text.get_or_create_collection(
+            name=collection1_text,
+            embedding_function=emb_fn_txt,
+            metadata={"hnsw:space": "cosine"})
 
-        # # Audio Transcripts text Vector Store
-        # client2_text = chromadb.PersistentClient(path=audio_db_path)
-        # collection2_text = 'text_collection'
-        # audio_vector_store = client2_text.get_or_create_collection(
-            # name=collection2_text,
-            # embedding_function=emb_fn_txt,
-            # metadata={"hnsw:space": "cosine"})
+        # Audio Transcripts text Vector Store
+        client2_text = chromadb.PersistentClient(path=audio_db_path)
+        collection2_text = 'text_collection'
+        audio_vector_store = client2_text.get_or_create_collection(
+            name=collection2_text,
+            embedding_function=emb_fn_txt,
+            metadata={"hnsw:space": "cosine"})
 
 
         #################################################################################################################
         ##################################################################################################################
         
-        # if frame_interval_i == 1:
-            # # print('Already done before')
-            # # frame_descriptions_db_path = f"chroma_mmtext_db_A-Prompt-Agent_SurgicalRobotsAnormal_{int(fps_i)}fps_99th"
-            # # audio_db_path = f"chroma_audio_db_SurgicalRobotsAnormal_{int(fps_i)}fps"
-            # # continue
-            # globals()[f"frameDescriptions_data_{frame_interval_i}"] = frameDescriptions_data
-        # else:
-            # # Create a new filtered variable dynamically
-            # filtered_data = {str(frame_id): frameDescriptions_data[str(frame_id)]
-                             # for frame_id in range(0, max(map(int, frameDescriptions_data.keys())), frame_interval_i)
-                             # #for frame_id in np.arange(0, max(map(int, frameDescriptions_data.keys())), frame_interval_i)
-                             # if str(frame_id) in frameDescriptions_data}
+        if frame_interval_i == 1:
+            # print('Already done before')
+            # frame_descriptions_db_path = f"chroma_mmtext_db_A-Prompt-Agent_SurgicalRobotsAnormal_{int(fps_i)}fps_99th"
+            # audio_db_path = f"chroma_audio_db_SurgicalRobotsAnormal_{int(fps_i)}fps"
+            # continue
+            globals()[f"frameDescriptions_data_{frame_interval_i}"] = frameDescriptions_data
+        else:
+            # Create a new filtered variable dynamically
+            filtered_data = {str(frame_id): frameDescriptions_data[str(frame_id)]
+                             for frame_id in range(0, max(map(int, frameDescriptions_data.keys())), frame_interval_i)
+                             #for frame_id in np.arange(0, max(map(int, frameDescriptions_data.keys())), frame_interval_i)
+                             if str(frame_id) in frameDescriptions_data}
 
-            # # Assign the filtered data to a dynamically named variable
-            # globals()[f"frameDescriptions_data_{frame_interval_i}"] = filtered_data
+            # Assign the filtered data to a dynamically named variable
+            globals()[f"frameDescriptions_data_{frame_interval_i}"] = filtered_data
 
-            # #print(f"Created variable: frameDescriptions_data_{frame_interval_i}")
+            #print(f"Created variable: frameDescriptions_data_{frame_interval_i}")
 
-        # # Step 22: Chunk documents
-        # frameDescriptions_chunked_texts, frames_metadata_list, frames_ids = process_and_store_frames(globals().get(f"frameDescriptions_data_{frame_interval_i}"), embeddings=emb_fn_txt)
-        # # Step 23: Add chunks into collection
-        # for i in range(0,len(frameDescriptions_chunked_texts),50):
-            # mmtext_vector_store.add(documents=frameDescriptions_chunked_texts[i:(i+50)], metadatas=frames_metadata_list[i:(i+50)], ids=frames_ids[i:(i+50)])
-        # print(len(frameDescriptions_chunked_texts), 'chunks added to frame_text_collection vectorstore')
+        # Step 22: Chunk documents
+        frameDescriptions_chunked_texts, frames_metadata_list, frames_ids = process_and_store_frames(globals().get(f"frameDescriptions_data_{frame_interval_i}"), embeddings=emb_fn_txt)
+        # Step 23: Add chunks into collection
+        for i in range(0,len(frameDescriptions_chunked_texts),50):
+            mmtext_vector_store.add(documents=frameDescriptions_chunked_texts[i:(i+50)], metadatas=frames_metadata_list[i:(i+50)], ids=frames_ids[i:(i+50)])
+        print(len(frameDescriptions_chunked_texts), 'chunks added to frame_text_collection vectorstore')
 
-        # ## STEP 3: Add wihsper generated audio transcript into text collection
-        # # Step 31: Load documents
-        # audioTranscript_documents = load_documents(text_folder=audioTranscript_text_folder)
-        # # Step 32: Chunk documents
-        # audioTranscript_chunked_texts, audio_metadata_list, audio_ids = chunk_documents(audioTranscript_documents, embeddings=emb_fn_txt)
-        # # Step 33: Add chunks into collection
-        # for i in range(0,len(audioTranscript_chunked_texts),50):
-            # audio_vector_store.add(documents=audioTranscript_chunked_texts[i:(i+50)], metadatas=audio_metadata_list[i:(i+50)], ids=audio_ids[i:(i+50)])    
-        # print(len(audioTranscript_chunked_texts), 'chunks added to audio_text_collection vectorstore')
+        ## STEP 3: Add wihsper generated audio transcript into text collection
+        # Step 31: Load documents
+        audioTranscript_documents = load_documents(text_folder=audioTranscript_text_folder)
+        # Step 32: Chunk documents
+        audioTranscript_chunked_texts, audio_metadata_list, audio_ids = chunk_documents(audioTranscript_documents, embeddings=emb_fn_txt)
+        # Step 33: Add chunks into collection
+        for i in range(0,len(audioTranscript_chunked_texts),50):
+            audio_vector_store.add(documents=audioTranscript_chunked_texts[i:(i+50)], metadatas=audio_metadata_list[i:(i+50)], ids=audio_ids[i:(i+50)])    
+        print(len(audioTranscript_chunked_texts), 'chunks added to audio_text_collection vectorstore')
 
-        # ## STEP 4: Remove redundant embeddings for similar frames from multimodal collection
-        # mmtext_vector_store = remove_duplicates_from_vector_store(mmtext_vector_store, VectorEmbeddings_similarity_threshold)
+        ## STEP 4: Remove redundant embeddings for similar frames from multimodal collection
+        mmtext_vector_store = remove_duplicates_from_vector_store(mmtext_vector_store, VectorEmbeddings_similarity_threshold)
 
-        # #print('done!!')
+        #print('done!!')
 
         ## STEP 5: Define Multimodal Retriever
         audio_vector_store = Chroma(persist_directory= audio_db_path, collection_name= 'text_collection', embedding_function=emb_fn_txt)
