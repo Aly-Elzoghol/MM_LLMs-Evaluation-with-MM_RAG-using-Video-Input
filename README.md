@@ -5,9 +5,10 @@ A Video-RAG pipeline was developed where semantic descriptions of sequential fra
 <img width="2000" height="806" alt="image" src="https://github.com/user-attachments/assets/8678ac70-8788-4059-8a73-7bb899db5ed8" />
 
 ## MM-RAG Evaluation Results
-### Raw-Image RAG Evaluation
+## Raw-Image RAG Evaluation
 <img width="918" height="490" alt="image" src="https://github.com/user-attachments/assets/1313dca1-e102-444b-b6c1-5a64f2596553" />
-### Image-Description RAG Evaluation
+
+## Image-Description RAG Evaluation
 <img width="801" height="498" alt="image" src="https://github.com/user-attachments/assets/c397bd46-68f5-4636-adb1-8795987be6a6" />
 
 
